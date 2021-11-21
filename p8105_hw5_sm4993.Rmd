@@ -89,7 +89,36 @@ results_df %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
+# Problem 2
+
+## Data import and cleaning
+```{r 2p1}
+zip = 
+  tibble(files = 
+    list.files("p8105_hw5_sm4993_files/data/", full.names = TRUE)) %>%
+  mutate(data = map(files, read_csv)) %>% 
+  unnest(data) %>% 
+  mutate(
+    exp_arm = substr(files, 30, 32),
+    id = substr(files, 30, 35)) %>% 
+  select(everything(), -files) %>% 
+  pivot_longer(
+    week_1:week_8,
+    names_to = "week",
+    names_prefix = "week_",
+    values_to = "value")
+
+knitr::kable(zip)
+```
+
+## Data plot
+```{r 2p2}
+ggplot(zip, aes(x = week, y = value, group = id, color = exp_arm)) + geom_line()
+```
+
+The control arm and the experimental treatment arm appear to have the same starting values, more or less. However, over time the control arm's values stay the same (perhaps decrease a tiny bit), while the experimental arm's values increase greatly. 
+
+# Problem 3
 
 
-
-
+ 
