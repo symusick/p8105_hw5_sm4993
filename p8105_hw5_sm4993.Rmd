@@ -120,5 +120,27 @@ The control arm and the experimental treatment arm appear to have the same start
 
 # Problem 3
 
+## Loading data
+```{r 3p1}
+set.seed(10)
+
+iris_with_missing = iris %>% 
+  map_df(~replace(.x, sample(1:150, 20), NA)) %>%
+  mutate(Species = as.character(Species))
+```
+
+## Cleaning data
+```{r 3p2}
+iris_function = function(x){
+  if (is.character(x)) {
+       x = replace_na(x, "virginica")}
+  else if (is.numeric(x)) {
+    x = replace_na(x, mean(x, na.rm = TRUE))}}
+
+iris_no_missing = 
+  as.data.frame(map(iris_with_missing, iris_function))
+
+knitr::kable(iris_no_missing)
+```
 
  
